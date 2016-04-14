@@ -1,5 +1,11 @@
 //this is a file of usefull js functions
 
+
+
+
+/************************************Prototypes************************************/
+
+
 //remove element
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -14,6 +20,15 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
+//replace all in string
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
+
+
+/************************************Functions************************************/
 
 //get window width
 function getWidth() {
@@ -96,3 +111,27 @@ if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
 	document.querySelector("body").classList.add("ios");
 }
 
+
+//check if arrays are equal
+function arraysEqual(arr1, arr2){
+    if (arr1.length !== arr2.length) return false;
+    for (var i = 0, len = arr1.length; i < len; i++){
+        if (arr1[i] !== arr2[i]){
+            return false;
+        }
+    }
+    return true; 
+}
+
+//duplicate object
+function duplicateObject(obj){
+	if(typeof obj == "object" && obj !== null){
+		var ret = {};
+		for(var index in obj){
+			ret[index] = duplicateObject(obj[index]);
+		}
+		return ret;
+	} else {
+		return obj;
+	}
+}
