@@ -88,3 +88,11 @@ function findPos(node) {
         return [curleft - curleftscroll, curtop - curtopscroll];
     }
 }
+
+
+//detect ios
+//I don't normally like checking useragent but ios messes up fixed backgrounds so check for that
+if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
+	document.querySelector("body").classList.add("ios");
+}
+
