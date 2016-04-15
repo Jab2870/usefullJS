@@ -28,7 +28,7 @@ String.prototype.replaceAll = function(search, replacement) {
 
 
 
-/************************************Functions************************************/
+/************************************Position/Dimentions************************************/
 
 //get window width
 function getWidth() {
@@ -58,20 +58,6 @@ function getHeight() {
   if (document.body) {
     return document.body.clientHeight;
   }
-}
-
-//normal random number
-function normalRandom() {
-	var val, u, v, s, mul;
-	do	{
-		u = Math.random()*2-1;
-		v = Math.random()*2-1;
-
-		s = u*u+v*v;
-	} while(s === 0 || s >= 1);
-	mul = Math.sqrt(-2 * Math.log(s) / s);
-	val = u * mul;
-	return val / 14;	// 7 standard deviations on either side
 }
 
 //finds current "fixed equivelent" position on screen
@@ -105,6 +91,46 @@ function findPos(node) {
 }
 
 
+/************************************Class Manipulation************************************/
+
+
+function hasClass(obj, c) {
+  return new RegExp('(\\s|^)' + class + '(\\s|$)').test(obj.className);
+}
+
+function addClass(obj, class) {
+  if (!hasClass(obj, class)) {
+    obj.className += ' ' + class;
+  }
+}
+
+function removeClass(obj, class) {
+  if (hasClass(obj, class)) {
+    obj.className = obj.className.replace(new RegExp('(\\s|^)' + class + '(\\s|$)'), ' ').replace(/\s+/g, ' ').replace(/^\s|\s$/, '');
+  }
+}
+
+
+/************************************Misc************************************/
+
+
+//normal random number
+function normalRandom() {
+	var val, u, v, s, mul;
+	do	{
+		u = Math.random()*2-1;
+		v = Math.random()*2-1;
+
+		s = u*u+v*v;
+	} while(s === 0 || s >= 1);
+	mul = Math.sqrt(-2 * Math.log(s) / s);
+	val = u * mul;
+	return val / 14;	// 7 standard deviations on either side
+}
+
+
+
+
 //detect ios
 //I don't normally like checking useragent but ios messes up fixed backgrounds so check for that
 if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
@@ -135,3 +161,48 @@ function duplicateObject(obj){
 		return obj;
 	}
 }
+
+//cross browser add event listener
+function addEvent(elm, evType, fn, useCapture) {
+
+	if (elm.addEventListener) { 
+
+		elm.addEventListener(evType, fn, useCapture); 
+
+		return true; 
+
+	}
+
+	else if (elm.attachEvent) { 
+
+		var r = elm.attachEvent('on' + evType, fn); 
+
+		return r; 
+
+	}
+
+	else {
+
+		elm['on' + evType] = fn;
+
+	}
+
+}
+
+//get prefixed version of css properties
+function getPrefixedVersion(property){
+        var root = document.documentElement;
+        var prefixes = "webkit,Webkit,Moz,O,ms,Khtml".split(",");
+        
+        if(property in root.style){
+            return property;
+        }
+        
+        property = property.charAt(0).toUpperCase() + property.slice(1);
+        
+        for (var i = 0; i<prefixes.length; i++){
+            if (prefixes[i] + property in root.style){
+                return prefixes[i] + property;
+            }
+        }
+    }
