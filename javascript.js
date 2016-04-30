@@ -11,7 +11,7 @@ Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
 }
 
-//remove from nodelist
+//remove from nodelist or array
 NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     for(var i = this.length - 1; i >= 0; i--) {
         if(this[i] && this[i].parentElement) {
@@ -95,18 +95,18 @@ function findPos(node) {
 
 
 function hasClass(obj, c) {
-  return new RegExp('(\\s|^)' + class + '(\\s|$)').test(obj.className);
+  return new RegExp('(\\s|^)' + c + '(\\s|$)').test(obj.className);
 }
 
-function addClass(obj, class) {
-  if (!hasClass(obj, class)) {
-    obj.className += ' ' + class;
+function addClass(obj, c) {
+  if (!hasClass(obj, c)) {
+    obj.className += ' ' + c;
   }
 }
 
-function removeClass(obj, class) {
-  if (hasClass(obj, class)) {
-    obj.className = obj.className.replace(new RegExp('(\\s|^)' + class + '(\\s|$)'), ' ').replace(/\s+/g, ' ').replace(/^\s|\s$/, '');
+function removeClass(obj, c) {
+  if (hasClass(obj, c)) {
+    obj.className = obj.className.replace(new RegExp('(\\s|^)' + c + '(\\s|$)'), ' ').replace(/\s+/g, ' ').replace(/^\s|\s$/, '');
   }
 }
 
@@ -142,7 +142,9 @@ if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
 function arraysEqual(arr1, arr2){
     if (arr1.length !== arr2.length) return false;
     for (var i = 0, len = arr1.length; i < len; i++){
-        if (arr1[i] !== arr2[i]){
+      if(Array.isArray(arr1[i]) && Array.isArray(arr2[i])){
+        if(!arraysEqual(arr1[i],arr2[i])) return false;
+      } else if (arr1[i] !== arr2[i]){
             return false;
         }
     }
@@ -191,18 +193,29 @@ function addEvent(elm, evType, fn, useCapture) {
 
 //get prefixed version of css properties
 function getPrefixedVersion(property){
-        var root = document.documentElement;
-        var prefixes = "webkit,Webkit,Moz,O,ms,Khtml".split(",");
-        
-        if(property in root.style){
-            return property;
-        }
-        
-        property = property.charAt(0).toUpperCase() + property.slice(1);
-        
-        for (var i = 0; i<prefixes.length; i++){
-            if (prefixes[i] + property in root.style){
-                return prefixes[i] + property;
-            }
+    var root = document.documentElement;
+    var prefixes = "webkit,Webkit,Moz,O,ms,Khtml".split(",");
+    
+    if(property in root.style){
+        return property;
+    }
+    
+    property = property.charAt(0).toUpperCase() + property.slice(1);
+    
+    for (var i = 0; i<prefixes.length; i++){
+        if (prefixes[i] + property in root.style){
+            return prefixes[i] + property;
         }
     }
+}
+
+//extend an object
+function extend(Child, Parent){
+  var Temp = function(){};
+ 
+  Temp.prototype = Parent.prototype;
+ 
+  Child.prototype = new Temp();
+ 
+  Child.prototype.constructor = Child;
+}
