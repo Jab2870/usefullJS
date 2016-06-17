@@ -11,6 +11,9 @@ Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
 }
 
+//If you wish to remove an HTML element with id test, do
+//document.getElementById("test").remove();
+
 //remove from nodelist or array
 NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     for(var i = this.length - 1; i >= 0; i--) {
@@ -20,11 +23,16 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
+//Same idea as above, to remove the third element of an aray called foo, do
+//foo[3].remove();
+
 //replace all in string
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.split(search).join(replacement);
 };
+//To replace all spaces with nothing in a string called bob, do
+//bob.replaceAll(" ", "");
 
 
 
