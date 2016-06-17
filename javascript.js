@@ -118,6 +118,21 @@ function removeClass(obj, c) {
   }
 }
 
+function toggleClass(obj, c){
+    if (!obj || !c){
+        return;
+    }
+
+    var classString = obj.className, nameIndex = classString.indexOf(c);
+    if (nameIndex == -1) {
+        classString += ' ' + c;
+    }
+    else {
+        classString = classString.substr(0, nameIndex) + classString.substr(nameIndex+c.length);
+    }
+    obj.className = classString;
+}
+
 
 /************************************Misc************************************/
 
