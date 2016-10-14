@@ -134,6 +134,55 @@ function toggleClass(obj, c){
 }
 
 
+/************************************AJAX************************************/
+
+function JHencodeURI(object) {
+    var encodedString = '';
+    for (var prop in object) {
+	if (object.hasOwnProperty(prop)) {
+	    if (encodedString.length > 0) {
+		encodedString += '&';
+	    }
+	    encodedString += encodeURI(prop + '=' + object[prop]);
+	}
+    }
+    return encodedString;
+}
+
+function ajaxGet(url,data,onsuccess,onerror){
+	var xhr = new XMLHttpRequest();
+	url = url + '?' + JHencodeURI(data);
+	xhr.open('GET', encodeURI(url));
+	xhr.onload = function() {
+	    if (xhr.status === 200 && onsuccess !== undefined) {
+		onsuccess(xhr.responseText);
+	    }
+	    else if (xhr.status !== 200 && onerror !== undefined) {
+		onerror(xhr.status);
+	    }
+	};
+	xhr.send();
+}
+
+
+function ajaxPost(url,data,onsuccess,onerror){
+
+	var xhr = new XMLHttpRequest();
+	var toSend = JHencodeURI(data);
+	xhr.open('POST', encodeURI(url));
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.onload = function() {
+	    if (xhr.status === 200 && onsuccess !== undefined) {
+		onsuccess(xhr.responseText);
+	    }
+	    else if (xhr.status !== 200 && onerror !== undefined) {
+		onerror(xhr.status);
+	    }
+	};
+	xhr.send(encodeURI(toSend));
+}
+
+
 /************************************Misc************************************/
 
 
